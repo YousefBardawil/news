@@ -6,6 +6,7 @@ use App\Models\Country;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use SebastianBergmann\LinesOfCode\Counter;
+use Spatie\Permission\Models\Role;
 
 class CountryController extends Controller
 {
@@ -27,6 +28,7 @@ class CountryController extends Controller
      */
     public function create()
     {
+
         return response()->view('cms.country.create');
     }
 

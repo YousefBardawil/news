@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Traits\HasRoles;
 
 class Admin extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory , HasRoles;
     public function country(){
 
         return $this->belongsTo(Country::class);
@@ -22,7 +23,6 @@ class Admin extends Authenticatable
 
     public static function boot() {
         parent::boot();
-
         static::deleting(function($admin) { // before delete() method call this
              $admin->user()->delete();
              $admin->country()->delete();

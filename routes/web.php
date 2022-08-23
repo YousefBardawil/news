@@ -11,9 +11,13 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\RolePermissionController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Route;
@@ -38,8 +42,17 @@ Route::prefix('cms/')->middleware('guest:admin,author')->group(function(){
     Route::post('{guard}/login',[AuthController::class,'login']);
 });
 
+Route::get('cms/register',[AuthController::class, 'showRegister'])->name('view.Register');
+Route::post('cms/do-register', [AuthController::class,'register']);
+
+
 Route::prefix('cms/admin')->middleware('auth:admin,author')->group(function(){
 Route::get('cms/admin' , [AuthController::class , 'logout'])->name('cms.logout');
+Route::get('edit/profile',[AuthController::class , 'editProfile'])->name('dashboard.profile');
+Route::get('edit/password',[SettingController::class ,'editpassword'])->name('cms.auth.editpassword');
+Route::post('update/password',[SettingController::class ,'updatepassword']);
+
+
 
 });
 
@@ -70,6 +83,14 @@ Route::prefix('cms/admin')->middleware('auth:admin,author')->group(function(){
     Route::post('comments_update/{id}' , [CommentController::class , 'update'] );
     Route::resource('users',UserController::class);
     Route::resource('profiles',ProfileController::class);
+
+    Route::resource('roles',RoleController::class);
+    Route::post('roles_update/{id}' , [RoleController::class , 'update'] );
+    Route::resource('permissions',PermissionController::class);
+    Route::post('permissions_update/{id}' , [PermissionController::class , 'update'] );
+    Route::resource('role.permissions',RolePermissionController::class);
+
+
     Route::post('profiles_update/{id}' , [ProfileController::class , 'update'] );
     Route::get('/create/articles/{id}', [ArticleController::class, 'createArticle'])->name('createArticle');
     Route::get('/index/articles/{id}', [ArticleController::class, 'indexArticle'])->name('indexArticle');

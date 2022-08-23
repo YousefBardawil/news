@@ -6,7 +6,9 @@ use App\Models\Admin;
 use App\Models\Country;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class AdminController extends Controller
 {
@@ -15,11 +17,22 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $admins = Admin::with('user','country')->orderBy('id','desc')->simplePaginate(3);
 
+        $admins = Admin::with('user','country')->orderBy('id','desc');
+        $admins = $admins->simplePaginate(2);
+        $this->authorize('viewAny', Admin::class);
         return response()->view('cms.admin.index', compact('admins'));
+
+        // search and filter
+        if($request->get('email')){
+            $admins = $admins->where('email','like','%' . $request->email . '%');
+        }
+
+         // if($request->get('first_name')){
+        //     $admins = $admins->user->where('first_name','like','%' . $request->first_name. '%');
+        // }
     }
 
     /**
@@ -30,7 +43,9 @@ class AdminController extends Controller
     public function create(){
 
         $countries = Country::all();
-        return response()->view('cms.admin.create' , compact('countries'));
+        $roles = Role::where('guard_name' ,'admin')->get();
+        $this->authorize('create', Admin::class);
+        return response()->view('cms.admin.create' , compact('countries' , 'roles'));
     }
 
     /**
@@ -57,6 +72,8 @@ class AdminController extends Controller
                if($isSaved){
 
                 $users= new User();
+                $roles = Role::findOrFail($request->get('role_id'));
+                $admins->assignRole($roles->name);
 
                 if(request()->hasFile('image')){
                     $image = $request->file('image');
@@ -64,6 +81,7 @@ class AdminController extends Controller
                     $image->move('images/admin', $imageName);
                     $users->image = $imageName;
                 }
+
 
                 $users->first_name = $request->get('first_name');
                 $users->last_name = $request->get('last_name');
@@ -79,7 +97,7 @@ class AdminController extends Controller
                }
                else {
 
-                return response()->json(['icon'=>'error' , 'title' => 'updated failed' ] , 400);
+                return response()->json(['icon'=>'error' , 'title' => 'created failed' ] , 400);
 
             }
 
@@ -96,9 +114,11 @@ class AdminController extends Controller
      * @param  \App\Models\Admin  $admin
      * @return \Illuminate\Http\Response
      */
-    public function show(Admin $admin)
+    public function show($id)
     {
-        //
+        $admins = Admin::findOrFail($id);
+        $countries = Country::all();
+        return response()->view('cms.admin.show',compact('countries','admins'));
     }
 
     /**
@@ -111,6 +131,8 @@ class AdminController extends Controller
     {
         $countries= Country::all();
         $admins = Admin::findOrFail($id);
+        $this->authorize('update', Admin::class);
+
 
         return response()->view('cms.admin.edit' , compact('admins','countries'));
     }
@@ -179,10 +201,21 @@ class AdminController extends Controller
      * @param  \App\Models\Admin  $admin
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Admin $admin)
     {
-        $admins = Admin::destroy($id);
+        // $admins = Admin::destroy($id);
+        $this->authorize('delete', Admin::class);
 
-       
+
+        if($admin->id == Auth::id()){
+            return redirect()->route('admins.index')->withErrors(trans('can not delete yourself'));
+        }else{
+            $admin->user()->delete();
+            $isDeleted = $admin->delete();
+            return response()->json(['icon'=> 'success' , 'title' => 'admin deleted successfuly'],200);
+        }
+
+
+
     }
 }

@@ -235,7 +235,63 @@
             </ul>
           </li>
 
+          <li class="nav-header">Role and Permission</li>
+
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-user"></i>
+              <p>
+                Role
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('roles.index') }}" class="nav-link">
+                  <i class="fas fa-list nav-icon"></i>
+
+                  <p>Index</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('roles.create') }}" class="nav-link">
+                  <i class="fas fa-plus nav-icon text-light"></i>
+                  <p>Create</p>
+                </a>
+              </li>
+
+            </ul>
+          </li>
+
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-user"></i>
+              <p>
+                Permission
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('permissions.index') }}" class="nav-link">
+                  <i class="fas fa-list nav-icon"></i>
+
+                  <p>Index</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('permissions.create') }}" class="nav-link">
+                  <i class="fas fa-plus nav-icon text-light"></i>
+                  <p>Create</p>
+                </a>
+              </li>
+
+            </ul>
+          </li>
+
           <li class="nav-header">Users</li>
+
+          @canAny(['Index-Admin' , 'Create-Admin'])
 
           <li class="nav-item">
             <a href="#" class="nav-link">
@@ -246,22 +302,31 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ route('admins.index') }}" class="nav-link">
-                  <i class="fas fa-list nav-icon"></i>
+                @can('Index-Admin')
+                <li class="nav-item">
+                    <a href="{{ route('admins.index') }}" class="nav-link">
+                      <i class="fas fa-list nav-icon"></i>
 
-                  <p>Index</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('admins.create') }}" class="nav-link">
-                  <i class="fas fa-plus nav-icon text-light"></i>
-                  <p>Create</p>
-                </a>
-              </li>
+                      <p>Index</p>
+                    </a>
+                  </li>
+                @endcan
+                @can('Create-Admin')
+                <li class="nav-item">
+                    <a href="{{ route('admins.create') }}" class="nav-link">
+                      <i class="fas fa-plus nav-icon text-light"></i>
+                      <p>Create</p>
+                    </a>
+                  </li>
+
+                @endcan
+
 
             </ul>
           </li>
+
+          @endcanAny
+
           <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-user"></i>
@@ -361,6 +426,7 @@
             </ul>
           </li>
 
+          @canAny(['Index country' , 'create country'])
           <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-city"></i>
@@ -370,6 +436,9 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
+
+
+              @can('Index country')
               <li class="nav-item">
                 <a href="{{ route('countries.index') }}" class="nav-link">
                   <i class="fas fa-list nav-icon"></i>
@@ -377,15 +446,22 @@
                   <p>Index</p>
                 </a>
               </li>
+              @endcan
+
+              @can('create country')
               <li class="nav-item">
                 <a href="{{ route('countries.create') }}" class="nav-link">
                   <i class="fas fa-plus nav-icon text-light"></i>
                   <p>Create</p>
                 </a>
               </li>
+              @endcan
+
 
             </ul>
           </li>
+
+          @endcanAny
 
           <li class="nav-item">
             <a href="#" class="nav-link">
@@ -540,13 +616,13 @@
 
           <li class="nav-header">settings</li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="{{ route('dashboard.profile') }}" class="nav-link">
               <i class="nav-icon fas fa-edit text-info"></i>
               <p class="text">Edit your profile</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="{{ route('cms.auth.editpassword') }}" class="nav-link">
               <i class="nav-icon fas fa-key text-success"></i>
               <p class="text">Change password</p>
             </a>

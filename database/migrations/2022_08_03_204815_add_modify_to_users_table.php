@@ -27,7 +27,6 @@ class AddModifyToUsersTable extends Migration
             $table->foreign('country_id')->on('countries')->references('id')->cascadeOnDelete();
             $table->morphs('actor');
 
-
         });
     }
 

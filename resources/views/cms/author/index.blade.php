@@ -37,9 +37,6 @@
               <tr>
                 <th>ID</th>
                 <th>first_name</th>
-                <th>last_name</th>
-                <th>mobile</th>
-                <th>email</th>
                 <th>Gender</th>
                 <th>status</th>
                 <th>image</th>
@@ -55,9 +52,6 @@
                 <tr>
                     <td>{{ $author->id }}</td>
                     <td>{{ $author->user->first_name }}</td>
-                    <td>{{ $author->user->last_name}}</td>
-                    <td>{{ $author->user->mobile}}</td>
-                    <td>{{ $author->email }}</td>
                     <td>{{ $author->user->gender }}</td>
                     <td>{{ $author->user->status}}</td>
                     <td>
@@ -71,7 +65,7 @@
                         <div class="btn-group">
                           <a href="{{ route('authors.edit' , $author->id) }}" type="button" class="btn btn-info">edit</a>
                           <a href="#" onclick="confirmDelete({{ $author->id}},this)" type="button" class="btn btn-danger">Delete</a>
-                          <button type="button" class="btn btn-success">show</button>
+                          <a href="{{ route('authors.show' , $author->id) }}" type="button" class="btn btn-success">show</a>
                         </div>
                       </td>
                   </tr>

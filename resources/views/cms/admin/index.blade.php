@@ -15,20 +15,41 @@
     <div class="col-12">
       <div class="card">
         <div class="card-header">
-            <a href="{{ route('admins.create') }}" type="submit" class="btn btn-success">create new admin</a>
+            {{-- <a href="{{ route('admins.create') }}" type="submit" class="btn btn-success">create new admin</a> --}}
+         <form action="" method="get" style="margin-bottom:2%;">
+          <div class="row">
+            <div class="input-icon col-md-4">
+                <input type="email" class="form-control" placeholder="Search By Email" name="email"
+                @if(request()->email)
+                  value={{ request()->email }}
+                @endif>
+                <span>
+                    <i class="flaticon2-search-1 text-muted"></i>
 
-
-          <div class="card-tools">
-            <div class="input-group input-group-sm" style="width: 150px;">
-              <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-
-              <div class="input-group-append">
-                <button type="submit" class="btn btn-default">
-                  <i class="fas fa-search"></i>
-                </button>
-              </div>
+                </span>
             </div>
+
+            <div class="input-icon col-md-4">
+                <input type="text" class="form-control" placeholder="Search By first_name" name="first_name"
+                @if(request()->first_name)
+                  value={{ request()->user->first_name}}
+                @endif>
+                <span>
+                    <i class="flaticon2-search-1 text-muted"></i>
+
+                </span>
+            </div>
+
+            <div class="col-md-6">
+                <button class="btn btn-danger btn-md" type="submit">Filter</button>
+                <a href=""></a>
+              </div>
           </div>
+
+
+        </form>
+
+
         </div>
         <!-- /.card-header -->
         <div class="card-body table-responsive p-0">
@@ -65,9 +86,9 @@
 
                     <td>
                         <div class="btn-group">
-                          <a href="{{ route('admins.edit' , $admin->id) }}" type="button" class="btn btn-info">edit</a>
+                          {{-- <a href="{{ route('admins.edit' , $admin->id) }}" type="button" class="btn btn-info">edit</a> --}}
                           <a href="#" onclick="confirmDelete({{ $admin->id}},this)" type="button" class="btn btn-danger">Delete</a>
-                          <button type="button" class="btn btn-success">show</button>
+                          <a href="{{ route('admins.show' , $admin->id) }}" type="button" class="btn btn-success">show</a>
                         </div>
                       </td>
                   </tr>

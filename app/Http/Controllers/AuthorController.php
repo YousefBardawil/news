@@ -7,6 +7,7 @@ use App\Models\Author;
 use App\Models\Country;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthorController extends Controller
@@ -97,9 +98,11 @@ class AuthorController extends Controller
      * @param  \App\Models\Author  $author
      * @return \Illuminate\Http\Response
      */
-    public function show(Author $author)
+    public function show($id)
     {
-        //
+        $authors = Author::findOrFail($id);
+        $countries = Country::all();
+        return response()->view('cms.author.show',compact('countries','authors'));
     }
 
     /**
@@ -178,8 +181,18 @@ class AuthorController extends Controller
      * @param  \App\Models\Author  $author
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Author $author)
     {
-        $authors = Author::destroy($id);
+        // $authors = Author::destroy($id);
+
+
+        if($author->id == Auth::id()){
+            return redirect()->route('admins.index')->withErrors(trans('can not delete yourself'));
+        }else{
+            $author->user()->delete();
+            $isDeleted = $author->delete();
+            return response()->json(['icon'=> 'success' , 'title' => 'admin deleted successfuly'],200);
+        }
+
     }
 }

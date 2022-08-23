@@ -21,6 +21,8 @@
     <!-- form start -->
     <form>
       <div class="card-body">
+       
+
         <div class="form-group">
           <label for="country_name">Country_name</label>
           <input type="text" class="form-control" id="country_name" name="country_name" placeholder="Enter country">
@@ -49,6 +51,8 @@
     let formData = new FormData;
    formData.append('country_name' ,document.getElementById('country_name').value );
    formData.append('code' ,document.getElementById('code').value );
+
+
 
    store('/cms/admin/countries',formData);
 
